@@ -1,0 +1,54 @@
+<!-- ═══════════════════════════════════════════════════════════════════════════
+     Sierra Log & Timber — Landowner Resources
+
+     Paste this whole block into a Custom HTML block on your site. That is the
+     entire installation: nothing to upload, no account, no plugin, and no
+     maintenance. Design and data updates happen at the source, so this snippet
+     never needs to change.
+
+     Links from the widget are automatically tagged with your site's domain,
+     so Sierra can see the traffic you send.
+     ═══════════════════════════════════════════════════════════════════════════ -->
+
+<iframe
+  id="slt-resources-frame"
+  src="https://hayyann.github.io/resources.sierralogandtimber.com-partner-widget/"
+  title="Sierra Log &amp; Timber landowner resources"
+  loading="lazy"
+  scrolling="no"
+  style="display:block; width:100%; height:520px; border:0;"
+></iframe>
+
+<script>
+(function () {
+  var frame = document.getElementById('slt-resources-frame');
+  if (!frame) return;
+
+  /* ── Tell the widget which site it is on ──────────────────────────────────
+     This is what puts your domain on every link the widget draws, as
+     utm_source. Change `source` below if you would rather be identified by a
+     campaign name than by your hostname — for example 'summit-realty' instead
+     of 'www.summitrealty.com'. */
+  var source = window.location.hostname;
+
+  var src = frame.getAttribute('src');
+  frame.setAttribute(
+    'src',
+    src + (src.indexOf('?') === -1 ? '?' : '&') +
+      'source=' + encodeURIComponent(source) +
+      '&medium=partner-widget' +
+      '&campaign=sierra-resources'
+  );
+
+  /* ── Follow the widget's height ───────────────────────────────────────────
+     The widget reports how tall it is whenever its contents change, so the
+     frame grows and shrinks instead of showing a scrollbar inside your page.
+     If this script is stripped by your page builder the widget still works;
+     it simply keeps the fixed height above. */
+  window.addEventListener('message', function (event) {
+    if (!event.data || event.data.type !== 'slt-resources:height') return;
+    var h = parseInt(event.data.height, 10);
+    if (h > 0 && h < 20000) frame.style.height = h + 'px';
+  });
+})();
+</script>

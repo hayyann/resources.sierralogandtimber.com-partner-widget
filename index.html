@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!--
+  ANY SITE MAY FRAME THIS PAGE, and that is the whole product.
+
+  THERE IS NO `frame-ancestors` META TAG HERE, AND THAT IS ON PURPOSE. The
+  obvious thing is `<meta http-equiv="Content-Security-Policy"
+  content="frame-ancestors *">`, and the widget this one is modelled on ships
+  exactly that with a note calling it "fully supported in all modern
+  browsers". It is not supported at all: `frame-ancestors` is one of the
+  directives the CSP specification says MUST be ignored when a policy arrives
+  in a meta element, and Chrome says so in the console. It was decoration.
+
+  What actually permits framing is that the host sends no X-Frame-Options and
+  no CSP of its own, which is true of GitHub Pages. Nothing here needs to
+  assert it, and asserting it in a way browsers ignore only teaches whoever
+  reads this file next that the line is doing a job it is not doing.
+-->
+
+<title>Sierra Log &amp; Timber — landowner resources</title>
+<meta name="description" content="Find the free and cost-shared wildfire, defensible space and forest health programmes published for your county.">
+
+<!--
+  NOT INDEXED. This page exists to be framed, and a search engine that ranked
+  it would be sending readers to a fragment of the directory instead of to the
+  directory. The canonical points at the real thing.
+-->
+<meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://resources.sierralogandtimber.com/">
+
+<link rel="preconnect" href="https://resources.sierralogandtimber.com" crossorigin>
+<link rel="stylesheet" href="widget.css">
+
+<style>
+  /* The page is only ever a stage for the widget. Transparent, so it takes
+     the colour of whatever it is embedded in rather than stamping a rectangle
+     of its own onto the partner's page. */
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+  }
+</style>
+</head>
+<body>
+
+<div id="slt-resources">
+  <!--
+    NOSCRIPT IS A REAL ANSWER, not an apology. Everything this widget does is
+    a link to the directory, so a reader without JavaScript is given the
+    directory itself rather than an empty box. The UTM parameters are absent
+    here because there is nothing running to read the partner's hostname; the
+    link still works, which matters more.
+  -->
+  <noscript>
+    <p style="margin:0;font-size:15px;">
+      <a href="https://resources.sierralogandtimber.com/?utm_medium=partner-widget&amp;utm_campaign=sierra-resources"
+         target="_blank" rel="noopener">
+        Browse free county resources for landowners at Sierra Log &amp; Timber
+      </a>
+    </p>
+  </noscript>
+</div>
+
+<script src="widget.js"></script>
+</body>
+</html>

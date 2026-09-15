@@ -1,0 +1,285 @@
+/* ===========================================================================
+   SIERRA LOG & TIMBER — LANDOWNER RESOURCES WIDGET
+   ===========================================================================
+
+   Everything is scoped to #slt-resources and every colour, radius and face is
+   a custom property on that one selector, so a partner can rebrand the whole
+   thing with a handful of lines and without touching this file. The defaults
+   are Sierra's: a deep forest green on warm paper.
+
+   IT INHERITS THE HOST PAGE'S TYPEFACE by default (--slt-font: inherit), which
+   is the one decision that does most of the work in making an embed stop
+   looking like an embed.
+   =========================================================================== */
+
+#slt-resources {
+  --slt-green: #2f4034;
+  --slt-green-deep: #24312a;
+  --slt-ink: #241d15;
+  --slt-secondary: #5d5546;
+  --slt-muted: #8a7c67;
+  --slt-paper: #faf8f4;
+  --slt-panel: #f4f0e8;
+  --slt-line: #e4ddd1;
+  --slt-radius: 10px;
+  --slt-font: inherit;
+
+  box-sizing: border-box;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 26px 22px 20px;
+  background: var(--slt-paper);
+  border: 1px solid var(--slt-line);
+  border-radius: var(--slt-radius);
+  font-family: var(--slt-font);
+  color: var(--slt-ink);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+#slt-resources *,
+#slt-resources *::before,
+#slt-resources *::after {
+  box-sizing: border-box;
+}
+
+/* --------------------------------------------------------------- the words */
+
+#slt-resources .slt-title {
+  margin: 0;
+  font-size: 23px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--slt-ink);
+}
+
+#slt-resources .slt-lede {
+  margin: 8px 0 0;
+  max-width: 62ch;
+  font-size: 14.5px;
+  color: var(--slt-secondary);
+}
+
+/* ---------------------------------------------------------------- the search */
+
+#slt-resources .slt-form {
+  margin: 18px 0 0;
+}
+
+/* Present for a screen reader, not for the eye: the placeholder carries the
+   same information visually and a second label above a single box is noise. */
+#slt-resources .slt-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+#slt-resources .slt-input {
+  width: 100%;
+  min-height: 48px;
+  padding: 0 16px;
+  border: 1px solid var(--slt-line);
+  border-radius: 8px;
+  background: #fff;
+  font: inherit;
+  font-size: 16px;            /* 16 exactly: anything less makes iOS zoom in */
+  color: var(--slt-ink);
+  appearance: none;
+}
+
+#slt-resources .slt-input::placeholder {
+  color: var(--slt-muted);
+}
+
+#slt-resources .slt-input:focus-visible {
+  outline: 2px solid var(--slt-green);
+  outline-offset: 1px;
+  border-color: var(--slt-green);
+}
+
+/* ---------------------------------------------------------------- the states */
+
+#slt-resources .slt-states {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 12px 0 0;
+}
+
+#slt-resources .slt-state {
+  padding: 7px 13px;
+  border: 1px solid var(--slt-line);
+  border-radius: 999px;
+  background: #fff;
+  font: inherit;
+  font-size: 13.5px;
+  color: var(--slt-secondary);
+  cursor: pointer;
+}
+
+#slt-resources .slt-state:hover {
+  border-color: var(--slt-muted);
+  color: var(--slt-ink);
+}
+
+#slt-resources .slt-state--on,
+#slt-resources .slt-state--on:hover {
+  background: var(--slt-green);
+  border-color: var(--slt-green);
+  color: var(--slt-paper);
+}
+
+#slt-resources .slt-state:focus-visible {
+  outline: 2px solid var(--slt-green);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------- the answers */
+
+#slt-resources .slt-status {
+  margin: 16px 0 0;
+  min-height: 1em;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--slt-muted);
+}
+
+#slt-resources .slt-list {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+#slt-resources .slt-item {
+  margin: 0;
+}
+
+/* The whole row is the link: a name, where it is and what happens next should
+   not be three separate tab stops. */
+#slt-resources .slt-link {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  padding: 13px 16px;
+  border: 1px solid var(--slt-line);
+  border-radius: 8px;
+  background: var(--slt-panel);
+  color: inherit;
+  text-decoration: none;
+}
+
+#slt-resources .slt-link:hover {
+  border-color: var(--slt-green);
+  background: #fff;
+}
+
+#slt-resources .slt-link:focus-visible {
+  outline: 2px solid var(--slt-green);
+  outline-offset: 2px;
+}
+
+#slt-resources .slt-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--slt-ink);
+}
+
+#slt-resources .slt-where {
+  font-size: 13.5px;
+  color: var(--slt-secondary);
+}
+
+#slt-resources .slt-go {
+  margin-left: auto;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--slt-green);
+  white-space: nowrap;
+}
+
+#slt-resources .slt-link:hover .slt-go {
+  text-decoration: underline;
+}
+
+/* ---------------------------------------------------------------- the footer */
+
+#slt-resources .slt-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 20px 0 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--slt-line);
+  font-size: 13px;
+}
+
+#slt-resources .slt-all {
+  color: var(--slt-green);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+#slt-resources .slt-all:hover {
+  text-decoration: underline;
+}
+
+#slt-resources .slt-by {
+  color: var(--slt-muted);
+}
+
+/* ----------------------------------------------------------------- narrow */
+
+@media (max-width: 560px) {
+  #slt-resources {
+    padding: 20px 16px 16px;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+  }
+
+  #slt-resources .slt-title {
+    font-size: 20px;
+  }
+
+  /* The row stacks, so "View resources" stops being pushed to a second line
+     on its own and reads as the last line of the row it belongs to. */
+  #slt-resources .slt-link {
+    display: block;
+  }
+
+  #slt-resources .slt-where,
+  #slt-resources .slt-go {
+    display: block;
+    margin-left: 0;
+  }
+
+  #slt-resources .slt-go {
+    margin-top: 4px;
+  }
+}
+
+/* A visitor who has asked their system for less movement gets none of ours.
+   There is little here to still, which is the point: the rule costs nothing
+   and means nobody has to check. */
+@media (prefers-reduced-motion: reduce) {
+  #slt-resources *,
+  #slt-resources *::before,
+  #slt-resources *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
