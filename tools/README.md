@@ -11,6 +11,7 @@ npm run serve      # in one terminal, serves the repository root on :4321
 npm run check      # ranking and link building, against the live index, no browser
 npm run render     # the real widget in a real frame: tags, growth, console
 npm run shots      # writes screenshots beside these scripts
+npm run county     # press a result: map, programmes, and a tagged link out
 npm run live       # the PUBLISHED widget, framed from another origin, end to end
 ```
 

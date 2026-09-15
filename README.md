@@ -36,11 +36,19 @@ today keeps working without you touching it again.
   states the directory covers: Arizona, California, Colorado, Idaho, Montana,
   Nevada, Oregon, Utah and Washington.
 - Buttons to browse every published county in a state.
-- Each result opens the county's page on
-  **resources.sierralogandtimber.com** in a new tab, listing the programmes
-  available there and the organisation behind each one.
+- **The county, without leaving your page.** Pressing a result opens a map of
+  that county with its towns on it, how many programmes and organisations
+  serve it and how many of those are run in the county itself, and the first
+  few programmes by name with the organisation behind each and whether it is
+  free, cost share or reimbursement.
+- **The full page, one press further.** "See all 27 programmes" opens the
+  county's own page on **resources.sierralogandtimber.com** in a new tab, with
+  your tag on the link.
 
 The widget carries no adverts, asks for no email address, and sets no cookies.
+The map is drawn from US Census geometry the directory publishes as coordinates,
+so there are no map tiles, no third-party mapping service and no API key
+anywhere in it.
 
 ---
 
@@ -113,6 +121,7 @@ framed version does for you.
 | What you see | What to do |
 |---|---|
 | A blank box | Give it a moment on first use: the directory index is fetched the first time somebody types or presses a state, not on page load. |
+| A county opens but shows no map | That county's outline is not published yet. The programmes and the link still work. |
 | "The directory could not be reached" | A network problem between your visitor and the directory. It retries on the next keystroke. |
 | A scrollbar inside the widget | The `<script>` in the snippet was stripped. Re-paste into a **Custom HTML** block. |
 | The frame never grows | Same cause as above. |
@@ -123,9 +132,12 @@ framed version does for you.
 
 ## Notes
 
-- **Nothing is cached against you.** The directory index is fetched from
-  `resources.sierralogandtimber.com` at the moment of use, so counties added or
-  updated there appear in your widget the same day.
+- **Nothing is cached against you.** The directory index and each county are
+  fetched from `resources.sierralogandtimber.com` at the moment of use, so
+  counties added or updated there appear in your widget the same day.
+- **It is a preview, and it says so.** The widget shows the first few
+  programmes and always prints the true total beside them, so a reader is
+  never told there are four when there are twenty-seven.
 - **It is not indexed.** The widget page carries `noindex` and a canonical
   pointing at the directory, so it cannot compete with your own pages or with
   Sierra's in search results.

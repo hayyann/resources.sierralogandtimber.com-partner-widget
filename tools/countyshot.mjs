@@ -1,0 +1,17 @@
+import { chromium } from "playwright";
+const b = await chromium.launch();
+const p = await b.newPage({ viewport: { width: 1000, height: 900 } });
+await p.goto("http://localhost:4321/tools/preview.html", { waitUntil: "networkidle" });
+const f = await (await p.$("#slt-resources-frame")).contentFrame();
+await f.waitForSelector(".slt-input");
+await f.fill(".slt-input", "flagstaff");
+await f.waitForSelector(".slt-item");
+await f.click(".slt-link");
+await f.waitForSelector(".slt-county");
+await p.waitForTimeout(900);
+await p.screenshot({ path: "county-desktop.png" });
+await p.setViewportSize({ width: 390, height: 1000 });
+await p.waitForTimeout(900);
+await p.screenshot({ path: "county-phone.png" });
+await b.close();
+console.log("ok");

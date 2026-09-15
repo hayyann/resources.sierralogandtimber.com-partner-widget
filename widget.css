@@ -165,19 +165,28 @@
   margin: 0;
 }
 
-/* The whole row is the link: a name, where it is and what happens next should
-   not be three separate tab stops. */
+/* The whole row is the control: a name, where it is and what happens next
+   should not be three separate tab stops.
+
+   IT IS A BUTTON, so it carries a button's resets. A button does not inherit
+   the page's typeface, does not fill its container and centres its own text,
+   and all three of those would be visible the moment this stopped being an
+   anchor. */
 #slt-resources .slt-link {
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
   gap: 4px 12px;
+  width: 100%;
   padding: 13px 16px;
   border: 1px solid var(--slt-line);
   border-radius: 8px;
   background: var(--slt-panel);
+  font: inherit;
+  text-align: left;
   color: inherit;
   text-decoration: none;
+  cursor: pointer;
 }
 
 #slt-resources .slt-link:hover {
@@ -281,5 +290,214 @@
   #slt-resources *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===========================================================================
+   ONE COUNTY, INSIDE THE WIDGET
+   ===========================================================================
+
+   The half that makes this more than a list of links: the county's own shape,
+   a few of its towns, and the first programmes actually available there, with
+   the full page one press away. */
+
+#slt-resources .slt-county {
+  border: 1px solid var(--slt-line);
+  border-radius: 8px;
+  background: var(--slt-panel);
+  overflow: hidden;
+}
+
+#slt-resources .slt-county-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--slt-line);
+  background: #fff;
+}
+
+#slt-resources .slt-back {
+  order: -1;
+  flex: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--slt-green);
+  cursor: pointer;
+}
+
+#slt-resources .slt-back:hover {
+  text-decoration: underline;
+}
+
+#slt-resources .slt-back:focus-visible {
+  outline: 2px solid var(--slt-green);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+#slt-resources .slt-county-name {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--slt-ink);
+}
+
+#slt-resources .slt-county-state {
+  font-size: 13.5px;
+  color: var(--slt-secondary);
+}
+
+#slt-resources .slt-county-body {
+  display: grid;
+  grid-template-columns: minmax(0, 200px) minmax(0, 1fr);
+  gap: 18px;
+  padding: 16px;
+}
+
+/* --------------------------------------------------------------- the map */
+
+#slt-resources .slt-map-wrap {
+  min-width: 0;
+}
+
+#slt-resources .slt-map {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Paint order is the hierarchy: neighbours faint and behind, the county
+   itself solid, the towns on top of both. */
+#slt-resources .slt-map-context {
+  fill: #fff;
+  stroke: var(--slt-line);
+  stroke-width: 1;
+}
+
+#slt-resources .slt-map-county {
+  fill: var(--slt-green);
+  fill-opacity: 0.12;
+  stroke: var(--slt-green);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+
+#slt-resources .slt-town circle {
+  fill: var(--slt-green);
+}
+
+#slt-resources .slt-town text {
+  font-size: 10px;
+  fill: var(--slt-secondary);
+}
+
+/* ---------------------------------------------------------- the programmes */
+
+#slt-resources .slt-county-detail {
+  min-width: 0;
+}
+
+#slt-resources .slt-tally {
+  margin: 0;
+  font-size: 14.5px;
+  color: var(--slt-secondary);
+}
+
+#slt-resources .slt-progs {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  border-top: 1px solid var(--slt-line);
+}
+
+#slt-resources .slt-prog {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--slt-line);
+}
+
+#slt-resources .slt-prog-head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+
+#slt-resources .slt-prog-name {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--slt-ink);
+}
+
+/* Free, Cost share or Reimbursement, in the directory's own words. */
+#slt-resources .slt-cost {
+  flex: none;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--slt-green);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: var(--slt-paper);
+}
+
+#slt-resources .slt-prog-org {
+  font-size: 13px;
+  color: var(--slt-secondary);
+}
+
+#slt-resources .slt-prog-cat {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--slt-muted);
+}
+
+#slt-resources .slt-open {
+  display: inline-block;
+  margin: 14px 0 0;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: var(--slt-green);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--slt-paper);
+  text-decoration: none;
+}
+
+#slt-resources .slt-open:hover {
+  background: var(--slt-green-deep);
+}
+
+#slt-resources .slt-open:focus-visible {
+  outline: 2px solid var(--slt-green);
+  outline-offset: 2px;
+}
+
+#slt-resources .slt-rest {
+  display: block;
+  margin-top: 6px;
+  font-size: 12.5px;
+  color: var(--slt-muted);
+}
+
+@media (max-width: 560px) {
+  #slt-resources .slt-county-body {
+    grid-template-columns: 1fr;
+  }
+
+  /* The map keeps a sensible size rather than filling a phone screen on its
+     own: it is orientation, not the point of the panel. */
+  #slt-resources .slt-map-wrap {
+    max-width: 220px;
+    margin: 0 auto;
   }
 }

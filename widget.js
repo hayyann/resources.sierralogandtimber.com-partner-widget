@@ -46,6 +46,7 @@
 
   var SITE = "https://resources.sierralogandtimber.com";
   var INDEX_URL = SITE + "/search-index.json";
+  var COUNTY_URL = SITE + "/api/county/";
 
   /**
    * The nine states the directory publishes, in the order it lists them.
@@ -312,27 +313,179 @@
     stateWrap = root.querySelector(".slt-states");
   }
 
-  /** One row. A town names the county it is going to, before it is reached. */
+  /**
+   * One row, and it is a BUTTON rather than a link.
+   *
+   * It used to be a link straight to the county page, which made the widget a
+   * list of somewhere else. Pressing a row now opens that county inside the
+   * widget — its shape, its towns, and the first few programmes actually
+   * available there — and the link out is the thing the reader presses AFTER
+   * seeing that there is something worth going for. The outbound link is
+   * still a real anchor, still tagged, and still opens in its own tab.
+   *
+   * A town names the county it is about to show, before it shows it.
+   */
   function row(entry) {
     var isTown = !!entry.place;
     var title = isTown ? entry.place : entry.name;
-    var under = isTown
-      ? entry.name + ", " + entry.stateName
-      : entry.stateName;
-    var href = resourceUrl(entry.url, isTown ? "town" : "county");
+    var under = isTown ? entry.name + ", " + entry.stateName : entry.stateName;
 
     return '<li class="slt-item">' +
-      '<a class="slt-link" href="' + esc(href) + '" target="_blank" rel="noopener">' +
+      '<button type="button" class="slt-link" data-fips="' + esc(entry.fips) + '" ' +
+        'data-kind="' + (isTown ? "town" : "county") + '" ' +
+        'data-from="' + esc(isTown ? entry.place : "") + '">' +
         '<span class="slt-name">' + esc(title) + '</span>' +
         '<span class="slt-where">' + esc(under) + '</span>' +
-        '<span class="slt-go" aria-hidden="true">View resources</span>' +
-      '</a>' +
+        '<span class="slt-go" aria-hidden="true">See what is there</span>' +
+      '</button>' +
     '</li>';
   }
 
   function say(text) {
     statusEl.textContent = text;
     measure();
+  }
+
+  /* ------------------------------------------------------------ one county
+
+     THE SECOND HALF OF THE WIDGET. A list of counties is a table of contents;
+     this is the part that shows there is something behind it. The directory's
+     /api/county/<fips> hands over the county's own shape as SVG path data,
+     a few of its towns, and the first four of its programmes with the true
+     total beside them, which is exactly enough to be worth a click and not
+     enough to replace the page it links to. */
+
+  var countyCache = {};
+  var viewing = null;
+
+  function loadCounty(fips) {
+    if (countyCache[fips]) return Promise.resolve(countyCache[fips]);
+    return fetch(COUNTY_URL + encodeURIComponent(fips), { credentials: "omit" })
+      .then(function (r) {
+        if (!r.ok) throw new Error("county " + fips + " answered " + r.status);
+        return r.json();
+      })
+      .then(function (data) {
+        countyCache[fips] = data;
+        return data;
+      });
+  }
+
+  /**
+   * The map, drawn from the path data the directory sends.
+   *
+   * NEIGHBOURS FIRST AND FAINT, then the county itself, then the towns: the
+   * paint order IS the hierarchy, and a context county drawn after the
+   * subject would sit on top of it. `aria-hidden` because everything the map
+   * says is said in words beside it; a screen reader should hear the county's
+   * name and its programmes, not a list of coordinates.
+   */
+  function mapSvg(map, name) {
+    if (!map || !map.county) return "";
+    var context = (map.context || []).map(function (d) {
+      return '<path class="slt-map-context" d="' + esc(d) + '"/>';
+    }).join("");
+    var towns = (map.towns || []).map(function (t) {
+      return '<g class="slt-town">' +
+        '<circle cx="' + t.x + '" cy="' + t.y + '" r="2.6"/>' +
+        '<text x="' + (t.x + 5) + '" y="' + (t.y + 3.5) + '">' + esc(t.name) + '</text>' +
+      '</g>';
+    }).join("");
+
+    return '<svg class="slt-map" viewBox="0 0 ' + map.width + ' ' + map.height + '" ' +
+      'role="img" aria-label="' + esc(name) + ', with some of its towns" ' +
+      'preserveAspectRatio="xMidYMid meet">' +
+      context +
+      '<path class="slt-map-county" d="' + esc(map.county) + '"/>' +
+      towns +
+    '</svg>';
+  }
+
+  /** "27 programmes from 32 organisations, 3 of them run in this county." */
+  function tally(data) {
+    var p = data.programs || {};
+    if (!p.total) return "No programmes are published here yet.";
+    var bits = [p.total === 1 ? "1 programme" : p.total + " programmes"];
+    if (data.organisations) {
+      bits.push("from " + data.organisations +
+        (data.organisations === 1 ? " organisation" : " organisations"));
+    }
+    var line = bits.join(" ");
+    if (p.local) line += ", " + p.local + " of them run in this county";
+    return line + ".";
+  }
+
+  function programCard(program) {
+    return '<li class="slt-prog">' +
+      '<span class="slt-prog-head">' +
+        '<span class="slt-prog-name">' + esc(program.name) + '</span>' +
+        (program.cost ? '<span class="slt-cost">' + esc(program.cost) + '</span>' : "") +
+      '</span>' +
+      '<span class="slt-prog-org">' + esc(program.org) + '</span>' +
+      '<span class="slt-prog-cat">' + esc(program.categoryLabel || program.category) + '</span>' +
+    '</li>';
+  }
+
+  function renderCounty(data, from) {
+    var p = data.programs || {};
+    var shown = p.shown || [];
+    var rest = Math.max(0, (p.total || 0) - shown.length);
+
+    /* The link the whole widget exists to send: the county's own page, with
+       the town the reader came in on where there was one, and the partner's
+       tag. */
+    var path = data.path + (from ? "?from=" + encodeURIComponent(slugify(from)) : "");
+    var href = resourceUrl(path, from ? "town" : "county");
+
+    listEl.innerHTML =
+      '<li class="slt-county">' +
+        '<div class="slt-county-head">' +
+          '<button type="button" class="slt-back">\u2190 Back to results</button>' +
+          '<span class="slt-county-name">' + esc(data.name) + '</span>' +
+          '<span class="slt-county-state">' + esc(data.state) + '</span>' +
+        '</div>' +
+
+        '<div class="slt-county-body">' +
+          '<div class="slt-map-wrap">' + mapSvg(data.map, data.name) + '</div>' +
+          '<div class="slt-county-detail">' +
+            '<p class="slt-tally">' + esc(tally(data)) + '</p>' +
+            (shown.length
+              ? '<ul class="slt-progs">' + shown.map(programCard).join("") + '</ul>'
+              : "") +
+            '<a class="slt-open" href="' + esc(href) + '" target="_blank" rel="noopener">' +
+              (rest > 0
+                ? "See all " + p.total + " programmes"
+                : "Open " + esc(data.name)) +
+            '</a>' +
+            (rest > 0
+              ? '<span class="slt-rest">and ' + rest +
+                (rest === 1 ? " more" : " more") + ' on the full page</span>'
+              : "") +
+          '</div>' +
+        '</div>' +
+      '</li>';
+
+    say(data.name + ", " + data.state);
+  }
+
+  function openCounty(fips, from) {
+    viewing = fips;
+    say("Loading\u2026");
+    loadCounty(fips).then(function (data) {
+      if (viewing !== fips) return;
+      renderCounty(data, from);
+    }).catch(function () {
+      if (viewing !== fips) return;
+      say("That county could not be loaded just now. Please try again in a moment.");
+    });
+  }
+
+  /** Back to whatever the reader was looking at before they opened a county. */
+  function restore() {
+    viewing = null;
+    if (inputEl.value.trim() !== "") search(inputEl.value);
+    else if (activeState) browse(activeState);
+    else { listEl.innerHTML = ""; say(""); }
   }
 
   function draw(entries, note) {
@@ -441,6 +594,14 @@
     root.querySelector(".slt-form").addEventListener("submit", function (e) {
       e.preventDefault();
       search(inputEl.value);
+    });
+
+    listEl.addEventListener("click", function (e) {
+      var back = e.target.closest(".slt-back");
+      if (back) { restore(); return; }
+      var btn = e.target.closest(".slt-link");
+      if (!btn) return;
+      openCounty(btn.getAttribute("data-fips"), btn.getAttribute("data-from") || "");
     });
 
     stateWrap.addEventListener("click", function (e) {
