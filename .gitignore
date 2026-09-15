@@ -3,3 +3,4 @@ package-lock.json
 tools/*.png
 tools/.dev/
 .DS_Store
+tools/live-preview.html

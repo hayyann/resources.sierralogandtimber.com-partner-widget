@@ -6,7 +6,8 @@
     "serve": "python3 -m http.server 4321 --directory ..",
     "check": "node check.mjs",
     "render": "node render.mjs",
-    "shots": "node shots.mjs"
+    "shots": "node shots.mjs",
+    "live": "node live.mjs"
   },
   "devDependencies": { "playwright": "1.63.0" }
 }
