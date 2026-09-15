@@ -31,8 +31,16 @@ await f.fill(".slt-input", "flagstaff");
 await f.waitForSelector(".slt-item", { timeout: 20000 });
 const name = await f.$eval(".slt-item .slt-name", (e) => e.textContent);
 const where = await f.$eval(".slt-item .slt-where", (e) => e.textContent);
-const href = await f.$eval(".slt-item .slt-link", (e) => e.getAttribute("href"));
 console.log(`\nsearch "flagstaff" -> ${name} (${where})`);
+
+/* The row opens the county in place; the tagged link is the press after it. */
+await f.click(".slt-item .slt-link");
+await f.waitForSelector(".slt-county", { timeout: 25000 });
+console.log("county opened:", await f.$eval(".slt-county-name", (e) => e.textContent));
+console.log("tally:        ", await f.$eval(".slt-tally", (e) => e.textContent));
+console.log("map paths:    ", await f.$$eval(".slt-map path", (els) => els.length));
+console.log("programmes:   ", await f.$$eval(".slt-prog-name", (els) => els.length));
+const href = await f.$eval(".slt-open", (e) => e.getAttribute("href"));
 console.log("href:", href);
 
 const u = new URL(href);
