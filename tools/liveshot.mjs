@@ -1,0 +1,12 @@
+import { chromium } from "playwright";
+const b = await chromium.launch();
+const p = await b.newPage({ viewport: { width: 1000, height: 820 } });
+await p.goto("http://localhost:4321/tools/live-preview.html", { waitUntil: "networkidle" });
+const f = await (await p.$("#slt-resources-frame")).contentFrame();
+await f.waitForSelector(".slt-input");
+await f.fill(".slt-input", "flagstaff");
+await f.waitForSelector(".slt-item");
+await p.waitForTimeout(700);
+await p.screenshot({ path: "live-desktop.png" });
+await b.close();
+console.log("ok");
